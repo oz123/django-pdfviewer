@@ -23,27 +23,26 @@
 #  
 
 # walk to table of contents and print titles and pages
-
+import sys
 import poppler
 
 def walk_index(iterp, doc):
     while iterp.next():
       link=iterp.get_action()
       s = doc.find_dest(link.dest.named_dest)
-      print link.title,' ', doc.get_page(s.page_num).get_label()
+      print link.title,' ', doc.get_page(s.page_num-1).get_label()
       child = iterp.get_child()
       if child:
         walk_index(child, doc)
 
 def main():
-    uri = ("file:///"+"/home/ozdeb/projects/django-pdf/pdfviewer_set/media"
-            "/pdfs/2012_master_thesis.pdf")
+    uri = ("file:///"+sys.argv[1])
     doc = poppler.document_new_from_file(uri, None)
       
     iterp = poppler.IndexIter(doc)
     link = iterp.get_action()
     s = doc.find_dest(link.dest.named_dest)
-    print link.title,' ', doc.get_page(s.page_num).get_label()
+    print link.title,' ', doc.get_page(s.page_num-1).get_label()
     walk_index(iterp, doc)
     return 0
     
